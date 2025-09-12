@@ -1,0 +1,83 @@
+﻿@model IEnumerable<EasyGames.Web.Models.Product>
+
+@{
+    ViewData["Title"] = "Catalog";
+    var categories = ViewBag.Categories as IEnumerable<string> ?? Enumerable.Empty<string>();
+    string selected = ViewBag.SelectedCategory as string ?? "";
+    string q = ViewBag.Q as string ?? "";
+}
+
+<h1>Catalog</h1>
+
+<form class="row g-2 mb-3" method="get" asp-action="Index">
+    <div class="col-auto">
+        <select name="category" class="form-select">
+            <option value="">All Categories</option>
+            @foreach (var c in categories)
+            {
+                <option value="@c" selected="@(c == selected ? "selected" : null)">@c</option>
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <input type="text" name="q" value="@q" class="form-control" placeholder="Search by name..." />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-secondary">Filter</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">Reset</a>
+    </div>
+</form>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+
+            @* Show Created only for Owner *@
+            @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Owner"))
+            {
+                <th>Created</th>
+            }
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Name</td>
+                <td>@p.Category</td>
+                <td>@p.Price.ToString("C")</td>
+
+                @* Show Created only for Owner *@
+                @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Owner"))
+                {
+                    <td>@p.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                }
+
+                <td>
+                    @* Only show Add-to-cart if NOT Owner *@
+                    @if (!(User.Identity?.IsAuthenticated == true && User.IsInRole("Owner")))
+                    {
+                        <form asp-controller="Cart" asp-action="Add" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@p.Id" />
+                            <input type="number" name="qty" value="1" min="1"
+                                   class="form-control d-inline-block" style="width:80px" />
+                            <button class="btn btn-sm btn-primary" type="submit">Add to cart</button>
+                        </form>
+                    }
+
+                    <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@p.Id">View</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No products found.</div>
+}

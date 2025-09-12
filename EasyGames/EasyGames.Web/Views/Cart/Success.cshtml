@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Order Placed";
+    var orderId = TempData["OrderId"]?.ToString();
+}
+
+<h1>Thank you!</h1>
+<p>Your order has been placed successfully.</p>
+
+@if (!string.IsNullOrEmpty(orderId))
+{
+    <p><strong>Order ID:</strong> @orderId</p>
+}
+
+<a class="btn btn-primary" asp-controller="Catalog" asp-action="Index">Back to Catalog</a>

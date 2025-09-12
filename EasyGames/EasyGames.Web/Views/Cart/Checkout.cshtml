@@ -1,0 +1,42 @@
+﻿@model List<EasyGames.Web.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Checkout";
+    decimal total = ViewBag.Total is decimal d ? d : 0m;
+}
+
+<h1>Checkout</h1>
+<p>Please confirm your order:</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th class="text-end">Price</th>
+            <th class="text-end">Qty</th>
+            <th class="text-end">Line</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var i in Model)
+        {
+            <tr>
+                <td>@i.Name</td>
+                <td class="text-end">@i.UnitPrice.ToString("C")</td>
+                <td class="text-end">@i.Qty</td>
+                <td class="text-end">@((i.UnitPrice * i.Qty).ToString("C"))</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="3" class="text-end">Total</th>
+            <th class="text-end">@total.ToString("C")</th>
+        </tr>
+    </tfoot>
+</table>
+
+<form asp-action="CheckoutConfirm" method="post">
+    <button class="btn btn-success" type="submit">Confirm Purchase</button>
+    <a class="btn btn-secondary" asp-action="Index">Back to Cart</a>
+</form>

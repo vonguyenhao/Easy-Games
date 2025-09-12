@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Oops";
+    var code = ViewBag.Code as int? ?? 0;
+}
+
+<div class="text-center my-5">
+    <h1 class="display-5">Status @code</h1>
+    <p class="lead">
+        @* Friendly message by status code *@
+        @if (code == 404)
+        {
+            @:The page you’re looking for doesn’t exist.
+        }
+        else if (code == 403)
+        {
+            @:You don’t have permission to access this resource.
+        }
+        else if (code == 401)
+        {
+            @:You must be logged in to view this page.
+        }
+        else
+        {
+            @:Something went wrong. Please try again.
+        }
+    </p>
+
+    <div class="mt-4">
+        <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Back to Home</a>
+        <a class="btn btn-outline-secondary ms-2" href="javascript:history.back()">Go Back</a>
+    </div>
+</div>

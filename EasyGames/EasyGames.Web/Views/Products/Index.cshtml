@@ -1,0 +1,41 @@
+﻿@model IEnumerable<EasyGames.Web.Models.Product>
+
+@{
+    ViewData["Title"] = "Stock";
+}
+
+<h1>Stock</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
+</p>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Name)</th>
+            <th>@Html.DisplayNameFor(model => model.Category)</th>
+            <th>@Html.DisplayNameFor(model => model.Price)</th>
+            <th>@Html.DisplayNameFor(model => model.StockQty)</th>
+            <th>Created</th> @* read-only, server-managed *@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(_ => item.Name)</td>
+                <td>@Html.DisplayFor(_ => item.Category)</td>
+                <td>@Html.DisplayFor(_ => item.Price)</td>
+                <td>@Html.DisplayFor(_ => item.StockQty)</td>
+                <td>@item.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td> @* formatted local time *@
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

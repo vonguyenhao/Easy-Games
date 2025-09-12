@@ -416,3 +416,6 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+# ASP.NET Core local dev config
+appsettings.Development.json
+**/secrets.json
