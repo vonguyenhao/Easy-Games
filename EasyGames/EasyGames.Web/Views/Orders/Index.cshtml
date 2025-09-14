@@ -1,0 +1,55 @@
+﻿@model IEnumerable<EasyGames.Web.Controllers.OrdersController.OrderRow>
+@{
+    ViewData["Title"] = "Orders";
+    bool isOwner = User.Identity?.IsAuthenticated == true && User.IsInRole("Owner");
+    string email = ViewBag.Email as string ?? "";
+}
+<h1>Orders</h1>
+
+@if (isOwner)
+{
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-auto">
+            <input name="email" value="@email" class="form-control" placeholder="Filter by email..." />
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-secondary" type="submit">Filter</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Reset</a>
+        </div>
+    </form>
+}
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            @if (isOwner)
+            {
+                <th>Email</th>
+            }
+            <th>Total</th>
+            <th>Created</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var o in Model)
+        {
+            <tr>
+                <td>@o.Id</td>
+                @if (isOwner)
+                {
+                    <td>@o.Email</td>
+                }
+                <td>@o.Total.ToString("C")</td>
+                <td>@o.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                <td><a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@o.Id">Details</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No orders found.</div>
+}

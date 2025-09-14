@@ -1,0 +1,41 @@
+﻿@model IEnumerable<EasyGames.Web.Controllers.OrdersController.OrderItemRow>
+@{
+    ViewData["Title"] = "Order Details";
+    int orderId = ViewBag.OrderId;
+    decimal total = (decimal)(ViewBag.Total ?? 0m);
+    DateTime createdAt = (DateTime)(ViewBag.CreatedAt ?? DateTime.UtcNow);
+    string? email = ViewBag.CustomerEmail as string;
+}
+<h1>Order #@orderId</h1>
+<p>
+    <strong>Created:</strong> @createdAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")<br />
+    @if (!string.IsNullOrEmpty(email))
+    {
+        <text><strong>Customer:</strong> @email<br /></text>
+    }
+    <strong>Total:</strong> @total.ToString("C")
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th class="text-end">Unit price</th>
+            <th class="text-end">Qty</th>
+            <th class="text-end">Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var i in Model)
+        {
+            <tr>
+                <td>@i.ProductName</td>
+                <td class="text-end">@i.UnitPrice.ToString("C")</td>
+                <td class="text-end">@i.Qty</td>
+                <td class="text-end">@i.Subtotal.ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-secondary" asp-action="Index">Back to Orders</a>
